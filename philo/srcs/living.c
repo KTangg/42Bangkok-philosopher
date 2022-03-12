@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   living.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 20:41:51 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 00:22:15 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/13 00:44:05 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		alive_check(t_philo *philo)
 	return (1);
 }
 
-void	*routine(void *arg)
+void	*living(void *arg)
 {
 	t_philo	*philo;
 
@@ -64,7 +64,6 @@ void	*routine(void *arg)
 	if (!alive_check(philo))
 		return (NULL);
 	while (philo->alive)
-		continue ;
-		//philo_living(philo);
+		routine(philo);
 	return (NULL);
 }

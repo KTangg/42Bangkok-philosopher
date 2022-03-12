@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:23:40 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/12 20:37:05 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/13 00:43:42 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	create_thread(t_philo *philo, size_t philo_no, pthread_t *thread)
 	i = 0;
 	while (i < philo_no)
 	{
-		if (pthread_create(&thread[i], NULL, routine, &philo[i]) != 0)
+		if (pthread_create(&thread[i], NULL, living, &philo[i]) != 0)
 			return (0);
 		i++;
 	}
