@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 20:41:51 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 00:44:05 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/13 01:26:26 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*pulse_monitor(void *arg)
 	return (NULL);
 }
 
-int		alive_check(t_philo *philo)
+int	alive_check(t_philo *philo)
 {
 	pthread_t	thread;
 
@@ -60,10 +60,12 @@ void	*living(void *arg)
 	philo = (t_philo *)arg;
 	if (!init_limit(philo))
 		return (NULL);
-	printf("Limit philo %zu at %lu sec %d usec\n", philo->no, philo->limit.tv_sec, philo->limit.tv_usec);
 	if (!alive_check(philo))
 		return (NULL);
 	while (philo->alive)
-		routine(philo);
+	{
+		if (routine(philo))
+			return (NULL);
+	}
 	return (NULL);
 }

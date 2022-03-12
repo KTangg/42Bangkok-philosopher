@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:57:34 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 00:44:00 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/13 01:17:37 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ pthread_mutex_t	*init_fork(size_t phil_no);
 
 // Simulation Process
 void			*living(void *arg);
+int				routine(t_philo *philo);
 int				simulate(t_info *info);
 
 // Time Process

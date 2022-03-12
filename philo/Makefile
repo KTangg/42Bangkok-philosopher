@@ -6,7 +6,7 @@
 #    By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/12 14:53:45 by spoolpra          #+#    #+#              #
-#    Updated: 2022/03/12 23:03:56 by spoolpra         ###   ########.fr        #
+#    Updated: 2022/03/13 01:17:17 by spoolpra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJ_DIR = objs/
 
 INCS = -Iincludes/ -I$(LIB_DIR)includes/
 NAME = philo
-SRCS = philo.c input.c init.c simulation.c routine.c time.c free.c
+SRCS = philo.c input.c init.c simulation.c living.c routine.c time.c free.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
