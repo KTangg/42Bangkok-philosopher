@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 21:30:38 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 01:03:46 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:27:27 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,14 @@ int	timecmp(t_time t1, t_time t2)
 		else
 			return (0);
 	}
+}
+
+long	timestamp(t_time start)
+{
+	long	result;
+	t_time	now;
+
+	gettimeofday(&now, NULL);
+	result = timems(now) - timems(start);
+	return (result);
 }

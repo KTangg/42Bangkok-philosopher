@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:45:00 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/12 23:11:34 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:38:20 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	init_limit(t_philo *philo)
 		return (0);
 	}
 	philo->limit = add_time(current, philo->die_ms);
+	philo->right = 0;
+	philo->left = 0;
 	return (1);
 }
 
@@ -88,4 +90,19 @@ t_philo	*init_philo(t_info *info, pthread_mutex_t *fork_mutex)
 		philo[i].fork = fork;
 	}
 	return (philo);
+}
+
+int	init_start(t_philo *philo, size_t philo_no)
+{
+	int		i;
+	t_time	current;
+
+	gettimeofday(&current, NULL);
+	i = 0;
+	while (i < (int)philo_no)
+	{
+		philo[i].start = current;
+		i++;
+	}
+	return (1);
 }

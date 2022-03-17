@@ -6,31 +6,42 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 20:41:51 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 01:26:26 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:35:36 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	release_fork(t_philo *philo)
+{
+	if (philo->left == 1)
+	{
+		pthread_mutex_unlock(philo->fork.left);
+		philo->left = 0;
+	}
+	if (philo->right == 1)
+	{
+		pthread_mutex_unlock(philo->fork.right);
+		philo->right = 0;
+	}
+}
+
 void	*pulse_monitor(void *arg)
 {
 	t_time	now;
-	t_time	limit;
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	while (philo->alive)
 	{
-		limit = philo->limit;
-		if (gettimeofday(&now, NULL) != 0)
+		gettimeofday(&now, NULL);
+		if (timecmp(now, philo->limit) > 0)
 		{
-			printf("Error: Couldn't get current time\n");
-			return (NULL);
-		}
-		if (timecmp(now, limit) > 0)
-		{
-			printf("%lu %zu died\n", timems(now), philo->no);
+			pthread_mutex_lock(&philo->mutex_alive);
+			printf("%08lu %zu died\n", timestamp(philo->start), philo->no);
 			philo->alive = 0;
+			release_fork(philo);
+			pthread_mutex_unlock(&philo->mutex_alive);
 		}
 	}
 	return (NULL);
@@ -55,9 +66,12 @@ int	alive_check(t_philo *philo)
 
 void	*living(void *arg)
 {
-	t_philo	*philo;
+	t_philo			*philo;
+	pthread_mutex_t	mutex_alive;
 
 	philo = (t_philo *)arg;
+	pthread_mutex_init(&mutex_alive, NULL);
+	philo->mutex_alive = mutex_alive;
 	if (!init_limit(philo))
 		return (NULL);
 	if (!alive_check(philo))
@@ -65,7 +79,11 @@ void	*living(void *arg)
 	while (philo->alive)
 	{
 		if (routine(philo))
+		{
+			pthread_mutex_destroy(&mutex_alive);
 			return (NULL);
+		}
 	}
+	pthread_mutex_destroy(&mutex_alive);
 	return (NULL);
 }

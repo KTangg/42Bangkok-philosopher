@@ -6,11 +6,12 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:23:40 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 00:43:42 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:36:30 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h>
 
 int	create_thread(t_philo *philo, size_t philo_no, pthread_t *thread)
 {
@@ -21,6 +22,7 @@ int	create_thread(t_philo *philo, size_t philo_no, pthread_t *thread)
 	{
 		if (pthread_create(&thread[i], NULL, living, &philo[i]) != 0)
 			return (0);
+		usleep(50);
 		i++;
 	}
 	return (1);
@@ -75,6 +77,7 @@ int	simulate(t_info *info)
 	if (!fork_mutex)
 		return (0);
 	philo = init_philo(info, fork_mutex);
+	init_start(philo, info->phil_no);
 	if (!philo)
 	{
 		destroy_mutex(fork_mutex, info->phil_no);

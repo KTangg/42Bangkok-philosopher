@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 00:44:39 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/13 01:16:57 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:27:21 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,22 @@
 
 int	prepare_eating(t_philo *philo, size_t no, t_fork fork)
 {
-	t_time	now;
-
 	pthread_mutex_lock(fork.left);
+	philo->left = 1;
 	if (!philo->alive)
 	{
-		pthread_mutex_unlock(fork.left);
+		release_fork(philo);
 		return (0);
 	}
-	gettimeofday(&now, NULL);
-	printf("%lu %lu has taken a fork\n", timems(now), no);
+	printf("%08lu %lu has taken a fork\n", timestamp(philo->start), no);
 	pthread_mutex_lock(fork.right);
+	philo->right = 1;
 	if (!philo->alive)
 	{
-		pthread_mutex_unlock(fork.left);
-		pthread_mutex_unlock(fork.right);
+		release_fork(philo);
 		return (0);
 	}
-	gettimeofday(&now, NULL);
-	printf("%lu %lu has taken a fork\n", timems(now), no);
+	printf("%08lu %lu has taken a fork\n", timestamp(philo->start), no);
 	return (1);
 }
 
@@ -43,10 +40,12 @@ int	eating(t_philo *philo, size_t no, t_fork fork)
 
 	gettimeofday(&now, NULL);
 	philo->limit = add_time(now, philo->die_ms);
-	printf("%lu %lu is eating\n", timems(now), no);
+	printf("%08lu %lu is eating\n", timestamp(philo->start), no);
 	usleep(philo->eat_ms * 1000);
 	pthread_mutex_unlock(fork.left);
+	philo->left = 0;
 	pthread_mutex_unlock(fork.right);
+	philo->right = 0;
 	return (1);
 }
 
@@ -61,14 +60,14 @@ int	complete_eating(t_philo *philo)
 
 int	sleeping(t_philo *philo)
 {
-	t_time	now;
-
-	gettimeofday(&now, NULL);
-	printf("%lu %lu is sleeping\n", timems(now), philo->no);
+	printf("%08lu %lu is sleeping\n", timestamp(philo->start), philo->no);
 	usleep(philo->sleep_ms * 1000);
-	gettimeofday(&now, NULL);
+	pthread_mutex_unlock(&philo->mutex_alive);
+	usleep(10);
+	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
-		printf("%lu %lu is thinking\n", timems(now), philo->no);
+		printf("%08lu %lu is thinking\n", timestamp(philo->start), philo->no);
+	pthread_mutex_unlock(&philo->mutex_alive);
 	return (1);
 }
 
@@ -76,14 +75,22 @@ int	routine(t_philo *philo)
 {
 	if (!prepare_eating(philo, philo->no, philo->fork))
 		return (0);
+	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 		eating(philo, philo->no, philo->fork);
+	pthread_mutex_unlock(&philo->mutex_alive);
+	usleep(10);
+	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 	{
 		if (complete_eating(philo))
 			return (1);
 	}
+	pthread_mutex_unlock(&philo->mutex_alive);
+	usleep(10);
+	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 		sleeping(philo);
+	pthread_mutex_unlock(&philo->mutex_alive);
 	return (0);
 }
