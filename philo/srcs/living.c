@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 20:41:51 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/17 14:35:36 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/17 14:44:30 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	*pulse_monitor(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (philo->alive)
+	while (philo->alive && philo->times_eat != 0)
 	{
 		gettimeofday(&now, NULL);
 		if (timecmp(now, philo->limit) > 0)
