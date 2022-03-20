@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   delay.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spoolpra <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 12:26:57 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/20 12:57:28 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/20 13:33:39 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 typedef struct timeval	t_time;
 typedef unsigned long	t_ms;
+
+int	sleep_ms = 10;
 
 t_ms	diff_time(t_time t1, t_time t2)
 {
@@ -37,19 +39,27 @@ t_ms	delay_time(void)
 	t_ms	diff;
 
 	gettimeofday(&before, NULL);
-	usleep(1000);
+	usleep(sleep_ms * 1000);
 	gettimeofday(&after, NULL);
-	diff = diff_time(after, before);
+	diff = diff_time(after, before) - sleep_ms;
 	return (diff);
 }
 
 int	main(void)
 {
+	int		count;
 	t_ms	diff;
+	t_ms	total;
+	double	avg;
 
-	for (int i = 0; i <= 10; i++)
+	count = 100;
+	total = 0;
+	for (int i = 0; i < count; i++)
 	{
-		diff = delay_time() - 1;
+		diff = delay_time();
 		printf("Sysdelay: %lu ms\n", diff);
+		total = total + diff;
 	}
+	avg = (double)total / count;
+	printf ("Average Sydelay: %f ms\n", avg);
 }
