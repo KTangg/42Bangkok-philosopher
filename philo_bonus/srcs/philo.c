@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:57:18 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/12 18:49:31 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:39:55 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,5 @@ int	main(int argc, char **argv)
 		return (2);
 	if (!simulate(&info))
 		return (3);
-	printf("All thread running complete\n");
 	return (0);
 }
