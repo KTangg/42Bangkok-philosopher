@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 12:26:57 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/20 13:35:55 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/27 13:39:19 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 typedef struct timeval	t_time;
 typedef unsigned long	t_ms;
 
-int	sleep_ms = 10;
+int	sleep_ms = 100;
 
 t_ms	diff_time(t_time t1, t_time t2)
 {
