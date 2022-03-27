@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:57:34 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/20 17:59:02 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/27 21:25:26 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_philo
 	t_timems		die_ms;
 	t_timems		eat_ms;
 	t_timems		sleep_ms;
-	pthread_mutex_t	mutex_alive;
 }	t_philo;
 
 // Reading Input Process
@@ -49,6 +48,9 @@ int				valid_input(int argc, char **argv, t_info *info);
 
 // Simulation Process
 int				simulate(t_info *info);
+
+// Initiate Process
+t_philo			init_philo(int no, t_info *info);
 
 // Time Process
 int				timecmp(t_time t1, t_time t2);

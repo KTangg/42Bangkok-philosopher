@@ -6,90 +6,75 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:23:40 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/17 14:36:30 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/27 22:12:45 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <unistd.h>
+#include <sys/wait.h>
 
-int	create_thread(t_philo *philo, size_t philo_no, pthread_t *thread)
+int	create_philo(int no, t_info *info)
 {
-	size_t	i;
+	t_philo	philo;
 
-	i = 0;
-	while (i < philo_no)
-	{
-		if (pthread_create(&thread[i], NULL, living, &philo[i]) != 0)
-			return (0);
-		usleep(50);
-		i++;
-	}
+	philo = init_philo(no, info);
+	printf("philo %lu die %lu\n", philo.no, philo.die_ms);
 	return (1);
 }
 
-int	join_thread(size_t phil_no, pthread_t *thread)
+int	wait_philo(pid_t *philo_pid, size_t phil_no)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < phil_no)
-	{
-		if (pthread_join(thread[i], NULL) != 0)
-			return (0);
-		i++;
-	}
+		waitpid(philo_pid[i++], NULL, 0);
 	return (1);
 }
 
-int	run_simulator(t_philo *philo, size_t philo_no)
+int	create_process(t_info *info)
 {
-	pthread_t	*thread;
+	pid_t	pid;
+	pid_t	*philo_pid;
+	size_t	i;
 
-	thread = (pthread_t *)malloc(sizeof(thread) * philo_no);
-	if (!thread)
+	philo_pid = (pid_t *)malloc(sizeof(pid_t) * info->phil_no);
+	if (!philo_pid)
+		exit(1);
+	pid = 1;
+	i = 0;
+	while (i < info->phil_no)
 	{
-		printf("Error: Allocate memory for threads failed\n");
-		return (0);
+		if (pid != 0)
+		{
+			pid = fork();
+			if (pid == 0)
+				create_philo(i, info);
+			if (pid != 0)
+				philo_pid[i] = pid;
+		}
+		i++;
 	}
-	if (!create_thread(philo, philo_no, thread))
-	{
-		printf("Error: Thread create failed\n");
-		free(thread);
-		return (0);
-	}
-	if (!join_thread(philo_no, thread))
-	{
-		printf("Error: Thread join failed\n");
-		free(thread);
-		return (0);
-	}
-	free(thread);
+	if (pid != 0)
+		wait_philo(philo_pid, info->phil_no);
+	free(philo_pid);
 	return (1);
 }
 
 int	simulate(t_info *info)
 {
-	t_philo			*philo;
-	pthread_mutex_t	*fork_mutex;
+	pid_t	pid;
 
-	fork_mutex = init_fork(info->phil_no);
-	if (!fork_mutex)
-		return (0);
-	philo = init_philo(info, fork_mutex);
-	init_start(philo, info->phil_no);
-	if (!philo)
+	pid = fork();
+	if (pid == -1)
 	{
-		destroy_mutex(fork_mutex, info->phil_no);
+		printf("Fail to Create Child Process\n");
 		return (0);
 	}
-	if (!run_simulator(philo, info->phil_no))
-	{
-		destroy_mutex(fork_mutex, info->phil_no);
-		free(philo);
-		return (0);
-	}
-	destroy_mutex(fork_mutex, info->phil_no);
-	free(philo);
+	if (pid == 0)
+		create_process(info);
+	else
+		waitpid(pid, NULL, 0);
 	return (1);
 }
