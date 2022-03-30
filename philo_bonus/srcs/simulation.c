@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:23:40 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/30 16:20:11 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 17:17:51 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int	create_philo(int no, t_info *info, sem_t *forks)
+int	create_philo(int no, t_info *info, sem_t *forks, t_time now)
 {
 	t_philo		philo;
 	pthread_t	pulse_thread;
 
-	philo = init_philo(no, info, forks);
+	philo = init_philo(no, info, forks, now);
 	if (pthread_create(&pulse_thread, NULL, pulse_monitor, &philo) != 0)
 	{
 		printf("Error: Couldn't Create Pulse Thread on Philo %d", no);
@@ -45,7 +45,7 @@ int	wait_philo(pid_t *philo_pid, size_t phil_no)
 	return (1);
 }
 
-int	create_process(t_info *info, sem_t *forks)
+int	create_process(t_info *info, sem_t *forks, t_time now)
 {
 	int		i;
 	pid_t	pid;
@@ -60,10 +60,10 @@ int	create_process(t_info *info, sem_t *forks)
 	{
 		if (pid != 0)
 		{
-			usleep(50);
+			usleep(10);
 			pid = fork();
 			if (pid == 0)
-				create_philo(i, info, forks);
+				create_philo(i, info, forks, now);
 			if (pid != 0)
 				philo_pid[i] = pid;
 		}
@@ -76,6 +76,7 @@ int	create_process(t_info *info, sem_t *forks)
 
 int	simulate(t_info *info)
 {
+	t_time	now;
 	sem_t	*sem_fork;
 	pid_t	pid;
 
@@ -87,11 +88,11 @@ int	simulate(t_info *info)
 	}
 	if (pid == 0)
 	{
-		sem_fork = sem_open("sem_fork", O_CREAT,
-				S_IRUSR | S_IWUSR, info->phil_no);
-		create_process(info, sem_fork);
-		sem_close(sem_fork);
+		sem_fork = sem_open("sem_fork", O_CREAT, 0644, info->phil_no);
 		sem_unlink("sem_fork");
+		gettimeofday(&now, NULL);
+		create_process(info, sem_fork, now);
+		sem_close(sem_fork);
 	}
 	else
 		waitpid(pid, NULL, 0);

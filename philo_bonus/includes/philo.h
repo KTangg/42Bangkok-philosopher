@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:57:34 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/30 16:21:38 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 17:14:43 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int				complete_eating(t_philo *philo);
 int				sleeping(t_philo *philo);
 
 // Initiate Process
-t_philo			init_philo(int no, t_info *info, sem_t *sem_fork);
+t_philo			init_philo(int no, t_info *info, sem_t *sem_fork, t_time now);
 
 // Time Process
 int				timecmp(t_time t1, t_time t2);
