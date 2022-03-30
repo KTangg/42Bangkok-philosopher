@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 12:26:57 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/27 13:39:19 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 16:30:35 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 typedef struct timeval	t_time;
 typedef unsigned long	t_ms;
-
-int	sleep_ms = 100;
 
 t_ms	diff_time(t_time t1, t_time t2)
 {
@@ -32,7 +30,7 @@ t_ms	diff_time(t_time t1, t_time t2)
 	return (diff);
 }
 
-t_ms	delay_time(void)
+t_ms	delay_time(int sleep_ms)
 {
 	t_time	before;
 	t_time	after;
@@ -48,18 +46,20 @@ t_ms	delay_time(void)
 int	main(void)
 {
 	int		count;
+	int		sleep_ms;
 	t_ms	diff;
 	t_ms	total;
 	double	avg;
 
-	count = 100;
+	count = 0;
 	total = 0;
-	for (int i = 0; i < count; i++)
+	sleep_ms = 100;
+	while (count++ < 20)
 	{
-		diff = delay_time();
+		diff = delay_time(sleep_ms);
 		printf("Sysdelay: %lu ms\n", diff);
 		total = total + diff;
 	}
 	avg = (double)total / count;
-	printf ("Average Sydelay: %f ms\n", avg);
+	printf ("Average Sysdelay: %f ms\n", avg);
 }

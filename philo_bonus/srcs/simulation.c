@@ -6,33 +6,31 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 18:23:40 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/30 15:29:40 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 16:20:11 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <fcntl.h>
-#include <semaphore.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
 int	create_philo(int no, t_info *info, sem_t *forks)
 {
-	sem_t		*sem_alive;
 	t_philo		philo;
 	pthread_t	pulse_thread;
 
-	philo = init_philo(no, info);
+	philo = init_philo(no, info, forks);
 	if (pthread_create(&pulse_thread, NULL, pulse_monitor, &philo) != 0)
 	{
 		printf("Error: Couldn't Create Pulse Thread on Philo %d", no);
 		return (0);
 	}
 	while (philo.alive)
-		living(philo, forks);
+		living(&philo);
 	if (pthread_join(pulse_thread, NULL) != 0)
 	{
 		printf("Error: Couldn't Join Pulse Thread on Philo %d", no);
+		return (0);
 	}
 	return (1);
 }
@@ -89,7 +87,8 @@ int	simulate(t_info *info)
 	}
 	if (pid == 0)
 	{
-		sem_fork = sem_open("sem_fork", O_CREAT, S_IRUSR | S_IWUSR, info->phil_no);
+		sem_fork = sem_open("sem_fork", O_CREAT,
+				S_IRUSR | S_IWUSR, info->phil_no);
 		create_process(info, sem_fork);
 		sem_close(sem_fork);
 		sem_unlink("sem_fork");
