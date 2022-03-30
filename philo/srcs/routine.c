@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 00:44:39 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/17 14:27:21 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 15:48:35 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int	sleeping(t_philo *philo)
 	printf("%08lu %lu is sleeping\n", timestamp(philo->start), philo->no);
 	usleep(philo->sleep_ms * 1000);
 	pthread_mutex_unlock(&philo->mutex_alive);
-	usleep(10);
 	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 		printf("%08lu %lu is thinking\n", timestamp(philo->start), philo->no);
@@ -79,7 +78,6 @@ int	routine(t_philo *philo)
 	if (philo->alive)
 		eating(philo, philo->no, philo->fork);
 	pthread_mutex_unlock(&philo->mutex_alive);
-	usleep(10);
 	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 	{
@@ -87,7 +85,6 @@ int	routine(t_philo *philo)
 			return (1);
 	}
 	pthread_mutex_unlock(&philo->mutex_alive);
-	usleep(10);
 	pthread_mutex_lock(&philo->mutex_alive);
 	if (philo->alive)
 		sleeping(philo);
