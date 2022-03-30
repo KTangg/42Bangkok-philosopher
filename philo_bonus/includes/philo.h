@@ -6,7 +6,7 @@
 /*   By: spoolpra <spoolpra@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 14:57:34 by spoolpra          #+#    #+#             */
-/*   Updated: 2022/03/27 21:25:26 by spoolpra         ###   ########.fr       */
+/*   Updated: 2022/03/30 15:31:30 by spoolpra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_info
 typedef struct s_philo
 {
 	int				alive;
+	size_t			forks;
 	size_t			no;
 	size_t			times_eat;
 	t_time			start;
@@ -47,6 +48,7 @@ typedef struct s_philo
 int				valid_input(int argc, char **argv, t_info *info);
 
 // Simulation Process
+void			*pulse_monitor(void *arg);
 int				simulate(t_info *info);
 
 // Initiate Process
